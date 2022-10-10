@@ -1,22 +1,24 @@
+$clusterName="wld01-cluster"
+
 # Create network
-$vnet = New-AksHciClusterNetwork -name "wld01-vnet" -vswitchName "InternalNAT" -gateway "192.168.0.1" -dnsServers "192.168.0.1" -ipAddressPrefix "192.168.0.0/16" -vipPoolStart "192.168.1.150" -vipPoolEnd "192.168.1.250" -k8sNodeIpPoolStart "192.168.1.3" -k8sNodeIpPoolEnd "192.168.1.149"
+$vnet = New-AksHciClusterNetwork -name $clusterName -vswitchName "InternalNAT" -gateway "192.168.0.1" -dnsServers "192.168.0.1" -ipAddressPrefix "192.168.0.0/16" -vipPoolStart "192.168.1.150" -vipPoolEnd "192.168.1.250" -k8sNodeIpPoolStart "192.168.1.3" -k8sNodeIpPoolEnd "192.168.1.149"
 
 # Create cluster
-New-AksHciCluster -name "wld01-cluster" -nodePoolName linuxnodepool -controlPlaneNodeCount 1 -nodeCount 1 -osType linux -vnet $vnet
+New-AksHciCluster -name $clusterName -nodePoolName linuxnodepool -controlPlaneNodeCount 1 -nodeCount 1 -osType linux -vnet $vnet
 
 # View cluster resources
 Get-AksHciCluster
-Get-AksHciNodePool -clusterName "wld01-cluster"
+Get-AksHciNodePool -clusterName $clusterName
 
 # Add nodePool
-New-AksHciNodePool -clusterName "wld01-cluster" -name windowsnodepool -count 1 -osType windows
+New-AksHciNodePool -clusterName $clusterName -name windowsnodepool -count 1 -osType windows
 
 # Scale nodePool
-Set-AksHciNodePool -clusterName "wld01-cluster" -name linuxnodepool -count 2
+Set-AksHciNodePool -clusterName $clusterName -name linuxnodepool -count 2
 # Scale control controlPlane
-Set-AksHciCluster –Name "wld01-cluster" -controlPlaneNodeCount 3
+Set-AksHciCluster –Name $clusterName -controlPlaneNodeCount 3
 
 # Sign in to Azure
 Connect-AzAccount
 # Integrate your target cluster with Azure Arc
-Enable-AksHciArcConnection -name "wld01-cluster"
+Enable-AksHciArcConnection -name $clusterName
