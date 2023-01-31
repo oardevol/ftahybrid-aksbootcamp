@@ -1,0 +1,44 @@
+$subscriptionID="c83e41ff-0233-46b3-9bb1-826cd887b446"
+$resourceGroup="oardevol-hybrid"
+$location="westeurope"
+$resourceName="oardevol-bridge"
+$workDirectory="V:\AKS-HCI\"
+$vswitchname="InternalNAT"
+$ipaddressprefix="192.168.0.0/16"
+$gateway="192.168.0.1"
+$dnsservers="192.168.0.1"
+$vmIP="192.168.0.200"
+$controlPlaneIP="192.168.0.201"
+
+# register providers
+az provider register --namespace Microsoft.Kubernetes --wait
+az provider register --namespace Microsoft.ExtendedLocation --wait
+az provider register --namespace Microsoft.ResourceConnector --wait
+az provider register --namespace Microsoft.HybridContainerService --wait
+az provider register --namespace Microsoft.HybridConnectivity --wait
+
+az extension add -n k8s-extension
+az extension add -n customlocation
+az extension add -n arcappliance --version 0.2.27
+az extension add -n hybridaks
+
+Install-Module -Name ArcHci -Force -Confirm:$false -SkipPublisherCheck -AcceptLicense
+
+New-ArcHciAksConfigFiles -subscriptionID $subscriptionID -location $location -resourceGroup $resourceGroup `
+    -resourceName $resourceName -workDirectory $workDirectory -vnetName $vswitchname `
+    -vswitchName $vswitchName -ipaddressprefix $ipaddressprefix -gateway $gateway -dnsservers $dnsservers `
+    -controlPlaneIP $controlPlaneIP -k8snodeippoolstart $vmIP -k8snodeippoolend $vmIP
+
+$configfile = $workDirectory+"\hci-appliance.yaml"
+$appliancekubeconfig = $workDirectory+"\applianceconfig"
+
+az arcappliance validate hci --config-file $configfile
+az arcappliance prepare hci --config-file $configfile
+
+az arcappliance deploy hci --config-file $configfile --outfile $appliancekubeconfig
+az arcappliance show --resource-group $resourceGroup --name $resourceName --query "status" -o tsv
+
+# Install aks extension
+az k8s-extension create --resource-group $resourceGroup --cluster-name $resourceName --cluster-type appliances `
+    --name $resourceName+"-ext" --extension-type Microsoft.HybridAKSOperator `
+    --config Microsoft.CustomLocation.ServiceAccount="default"   
