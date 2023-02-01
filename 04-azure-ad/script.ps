@@ -1,15 +1,20 @@
+# Define variables
+$group_name="aks-bootcamp-users"
+$resource_group="rg-bootcamp"
+$current_user_obj_id=(az ad signed-in-user show --query "id" -o tsv)
+
 # Create Azure AD group
 az login
-az ad group create --display-name oardevol-hci-users --mail-nickname oardevol-hci-users
+az ad group create --display-name $group_name --mail-nickname $group_name
 
 # Add user to group
-az ad group member add --group oardevol-hci-users --member-id e9887f34-ffd7-4871-88cc-b029f7e35744
+az ad group member add --group $group_name --member-id $current_user_obj_id
 
 # Give user permissions to Arc enabled K8s permission
 # Azure Arc Enabled Kubernetes Cluster User Role
 # PORTAL
 
-echo @'
+echo @"
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -19,12 +24,12 @@ rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
-'@ > role-dev-namespace.yaml
+"@ > role-dev-namespace.yaml
 kubectl apply -f role-dev-namespace.yaml
 
-$groupId=az ad group show --group oardevol-hci-users --query objectId -o tsv
+$group_obj_id=(az ad group show --group $group_name --query "id" -o tsv)
 
-echo @'
+echo @"
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -37,9 +42,9 @@ roleRef:
 subjects:
 - kind: Group
   namespace: default
-  name: 33904253-5e17-4ecd-8445-26c717b384cc
-'@ > rolebinding-dev-namespace.yaml
+  name: $($group_obj_id)
+"@ > rolebinding-dev-namespace.yaml
 kubectl apply -f rolebinding-dev-namespace.yaml
 
 # Connect
-az connectedk8s proxy -n $clusterName -g oardevol-hci
+az connectedk8s proxy -n $clusterName -g resource_group
