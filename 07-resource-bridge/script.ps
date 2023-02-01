@@ -36,9 +36,25 @@ az arcappliance validate hci --config-file $configfile
 az arcappliance prepare hci --config-file $configfile
 
 az arcappliance deploy hci --config-file $configfile --outfile $appliancekubeconfig
+az arcappliance create hci --config-file $configfile --kubeconfig $appliancekubeconfig
+# Wait until connected
 az arcappliance show --resource-group $resourceGroup --name $resourceName --query "status" -o tsv
 
 # Install aks extension
+$extensionName=$resourceName+"-ext"
 az k8s-extension create --resource-group $resourceGroup --cluster-name $resourceName --cluster-type appliances `
-    --name $resourceName+"-ext" --extension-type Microsoft.HybridAKSOperator `
+    --name $extensionName --extension-type Microsoft.HybridAKSOperator `
     --config Microsoft.CustomLocation.ServiceAccount="default"   
+# Wait for succeeded
+az k8s-extension show --resource-group $resourceGroup --cluster-name $resourceName --cluster-type appliances `
+    --name $extensionName --query "provisioningState" -o tsv
+
+# Create custom location
+$ArcResourceBridgeId=az arcappliance show --resource-group $resourceGroup --name $resourceName --query id -o tsv
+$AKSClusterExtensionResourceId=az k8s-extension show --resource-group $resourceGroup --cluster-name $resourceName `
+     --cluster-type appliances --name $extensionName --query id -o tsv
+
+$customLocationName=$resourceName
+az customlocation create --name $customLocationName --namespace "default" --host-resource-id $ArcResourceBridgeId --cluster-extension-ids $AKSClusterExtensionResourceId --resource-group $resourceGroup
+# Wait for succeeded
+az customlocation show --name $customLocationName --resource-group $resourceGroup --query "provisioningState" -o tsv
