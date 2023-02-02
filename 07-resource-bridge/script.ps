@@ -58,3 +58,31 @@ $customLocationName=$resourceName
 az customlocation create --name $customLocationName --namespace "default" --host-resource-id $ArcResourceBridgeId --cluster-extension-ids $AKSClusterExtensionResourceId --resource-group $resourceGroup
 # Wait for succeeded
 az customlocation show --name $customLocationName --resource-group $resourceGroup --query "provisioningState" -o tsv
+$customlocationID=az customlocation show --name $customLocationName --resource-group $resourceGroup --query "id" -o tsv
+
+
+# Create AKS cluster
+$clustervnetname = "oriol-bridge-vnet-01"
+$vswitchname="InternalNAT"
+$ipaddressprefix="192.168.0.0/16"
+$gateway="192.168.0.1"
+$dnsservers="192.168.0.1"
+$vmPoolStart="192.168.0.205"
+$vmPoolEnd="192.168.0.215"
+$vipPoolStart="192.168.0.216"
+$vipPoolEnd="192.168.0.225"
+
+# Create aks hybrid vnet
+New-KvaVirtualNetwork -name $clustervnetname -vswitchname $vswitchname `
+    -ipaddressprefix $ipaddressprefix -gateway $gateway -dnsservers $dnsServers `
+    -vippoolstart $vipPoolStart -vippoolend $vipPoolEnd `
+    -k8snodeippoolstart $vmPoolStart -k8snodeippoolend $vmPoolEnd `
+    -kubeconfig $appliancekubeconfig
+
+# Link aks hybrid vnet to Azure vnet
+az hybridaks vnet create -n $clustervnetname -g $resourceGroup --custom-location $customlocationID --moc-vnet-name $clustervnetname
+$vnetId=az hybridaks vnet show --name $clustervnetname --resource-group $resourceGroup --query "id" -o tsv
+
+# Create aks cluster, alternatively, use portal
+az hybridaks create -n "oardevol-hybrid-aks-01" -g $resourceGroup --custom-location $customlocationID --vnet-ids $vnetId `
+    --aad-admin-group-object-ids "59ed0a52-e018-4bcc-bdd5-ea81778405bf" --generate-ssh-keys
