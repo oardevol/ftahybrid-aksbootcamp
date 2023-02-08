@@ -15,7 +15,7 @@ This bootcamp will explain what aks hybrid is focusing on the design and archite
 
 ## Duration
 
-This bootcamp will have a duration of **5 hours**, during this time it will not be possible to cover all the scenarios covered in this repo, it is expected that attendants will try some of them at their own pace.
+This bootcamp will have a duration of **5 hours**, during this time it will not be possible to cover all the scenarios described, it is expected that attendants will try some of them at their own pace.
 
 ## Audience
 
