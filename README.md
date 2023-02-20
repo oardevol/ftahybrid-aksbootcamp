@@ -27,6 +27,6 @@ This bootcamp is targeted to the following roles
 ## Environment
 
 - We will use a Windows Server nested virtualization environment installed following the instructions from: https://learn.microsoft.com/en-us/azure/aks/hybrid/aks-hci-evaluation-guide-1
- - Make sure you select Premium SSD for disks and 256GB disk size
- - You can turn off the VM after creation and start it for the bootcamp
+  - Make sure you select Premium SSD for disks and 256GB disk size
+  - You can turn off the VM after creation and start it for the bootcamp
 - Install az cli in the vm
