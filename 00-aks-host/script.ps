@@ -27,7 +27,10 @@ $vnet = New-AksHciNetworkSetting -name "mgmtvnet" -vSwitchName "InternalNAT" -ga
 
 # Install aks host
 Set-AksHciConfig -vnet $vnet -imageDir "V:\AKS-HCI\Images" -workingDir "V:\AKS-HCI\WorkingDir" `
-   -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose
+   -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose -version "1.0.13.10907"
+# Install aks host (if you're planning to deploy Arc Resource Bridge)
+Set-AksHciConfig -vnet $vnet -imageDir "V:\AKS-HCI\Images" -workingDir "V:\AKS-HCI\WorkingDir" `
+   -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose -version "1.0.13.10907"
 
 Set-AksHciRegistration -SubscriptionId $subscriptionId -ResourceGroupName $resourceGroup
 
