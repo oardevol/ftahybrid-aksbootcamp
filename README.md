@@ -56,6 +56,12 @@ You should install/configure the following tools:
 
   Reopen the PowerShell terminal to apply changes.
 
+- Install AksHCI PowerShell module
+
+  ```powershell
+  Install-Module -Name AksHci -Repository PSGallery -Force -AcceptLicense
+  ```
+
 - Install [VSCode](https://community.chocolatey.org/packages/vscode.install), [Git](https://community.chocolatey.org/packages/git), [Az Powershell](https://community.chocolatey.org/packages/az.powershell).
   
   ```powershell
@@ -82,7 +88,7 @@ You should install/configure the following tools:
 - Install the following VSCode extensions:
   - [PowerShell](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell) but do not install PowerShell 7.0
 
-From this point on you are ready to start executing the commands in the various `script.ps1` files of this boot camp, selecting them and then hitting `F8`.
+From this point on you are ready to start executing the commands in the various `script.ps1` files of this boot camp, selecting them and then hitting `F8`. Before executing the scripts, you should execute `env.ps1` to define all environment variables used within the scripts. Make sure these variables point to your deployment.
 
 > Note: You should turn off the VM after setup and start it during the boot camp.
 
