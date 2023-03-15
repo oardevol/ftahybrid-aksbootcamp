@@ -81,7 +81,11 @@ New-KvaVirtualNetwork -name $clustervnetname -vswitchname $vswitchname `
 
 # Link aks hybrid vnet to Azure vnet
 az hybridaks vnet create -n $clustervnetname -g $resourceGroup --custom-location $customlocationID --moc-vnet-name $clustervnetname
-$vnetId=az hybridaks vnet show --name $clustervnetname --resource-group $resourceGroup --query "id" -o tsv
+$vnetId=az
+hybridaks vnet show --name $clustervnetname --resource-group $resourceGroup --query "id" -o tsv
+
+#download k8s vhd file, must be 1.21.9
+Add-KvaGalleryImage -kubernetesVersion 1.21.9
 
 # Create aks cluster, alternatively, use portal
 az hybridaks create -n "oardevol-hybrid-aks-01" -g $resourceGroup --custom-location $customlocationID --vnet-ids $vnetId `
