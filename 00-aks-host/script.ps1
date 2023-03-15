@@ -1,15 +1,16 @@
-# Use powershell admin window
-$subscriptionId = "f89ca1d5-8a0f-413e-aa15-8d22bf52c8f6"
-$resourceGroup = "oardevol-hybrid"
-
 # Sign in to Azure
-Connect-AzAccount
+Connect-AzAccount -Tenant $tenenantId
 Set-AzContext -Subscription $subscriptionId
 
-# Register resource provider
-Register-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes
-Register-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration
+# Check if resource providers are registered and register if not
+if ((Get-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes).RegistrationState -ne "Registered") {
+    Register-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes
+}
+if ((Get-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration).RegistrationState -ne "Registered") {
+   Register-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration
+}
 
+# Verify that provider are registered in the subscription
 Get-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes
 Get-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration
 
@@ -22,17 +23,13 @@ New-Item -Path "V:\AKS-HCI\" -Name "Config" -ItemType "directory" -Force
 
 # Create network
 $vnet = New-AksHciNetworkSetting -name "mgmtvnet" -vSwitchName "InternalNAT" -gateway "192.168.0.1" -dnsservers "192.168.0.1" `
-    -ipaddressprefix "192.168.0.0/16" -k8snodeippoolstart "192.168.0.3" -k8snodeippoolend "192.168.0.149" `
+    -ipaddressprefix "192.168.0.0/24" -k8snodeippoolstart "192.168.0.3" -k8snodeippoolend "192.168.0.149" `
     -vipPoolStart "192.168.0.150" -vipPoolEnd "192.168.0.250"
 
-# Install aks host
-Set-AksHciConfig -vnet $vnet -imageDir "V:\AKS-HCI\Images" -workingDir "V:\AKS-HCI\WorkingDir" `
-   -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose -version "1.0.13.10907"
-# Install aks host (if you're planning to deploy Arc Resource Bridge)
+# Install aks host (use specific version if you're planning to deploy Arc Resource Bridge)
 Set-AksHciConfig -vnet $vnet -imageDir "V:\AKS-HCI\Images" -workingDir "V:\AKS-HCI\WorkingDir" `
    -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose -version "1.0.13.10907"
 
 Set-AksHciRegistration -SubscriptionId $subscriptionId -ResourceGroupName $resourceGroup
 
 Install-AksHci
-
