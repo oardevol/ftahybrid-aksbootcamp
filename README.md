@@ -22,13 +22,17 @@ This boot camp will have a duration of **5 hours**, during this time it will not
 This boot camp is targeted to the following roles:
 
 - Azure Stack HCI infrastructure engineer looking to understand better what Kubernetes is and what administrative/operational tasks are needed in the Stack HCI environment
-- Kubernetes / AKS Admin looking at understanding aks hybrid solution and differences between aks hybrid and other K8s distribution (cloud based or on-premises)
+- Kubernetes / AKS Admin looking at understanding AKS hybrid solution and differences between AKS hybrid and other K8s distribution (cloud based or on-premises)
 
 ## Environment setup
 
-We will use a Windows Server nested virtualization environment installed [following the official instructions](https://learn.microsoft.com/azure/aks/hybrid/aks-hci-evaluation-guide-1). Use the following button to deploy in your Azure Subscription:
+We will use a Windows Server nested virtualization environment installed [following the official instructions](https://learn.microsoft.com/azure/aks/hybrid/aks-hci-evaluation-guide-1). The process is recorded in the following video:
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Faks-hci%2Fmain%2Feval%2Fjson%2Fakshcihost.json" title="Deploy to Azure" target="_blank"><img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"></a>
+[![Environment setup](https://img.youtube.com/vi/cMSzEHZsxJY/maxresdefault.jpg)](https://youtu.be/cMSzEHZsxJY)
+
+Use the following button to deploy in your Azure Subscription:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Faks-hci%2Fmain%2Feval%2Fjson%2Fakshcihost.json)
 
 Things to note:
 
