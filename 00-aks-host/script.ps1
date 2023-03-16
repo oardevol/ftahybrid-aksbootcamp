@@ -1,8 +1,8 @@
 # Variables used in this script, defined in ../env.ps1
-# $subscriptionId, $tenenantId, $resourceGroup
+# $subscriptionId, $tenantId, $resourceGroup
 
 # Sign in to Azure
-Connect-AzAccount -Tenant $tenenantId
+Connect-AzAccount -Tenant $tenantId
 Set-AzContext -Subscription $subscriptionId
 
 # Check if resource providers are registered and register if not
