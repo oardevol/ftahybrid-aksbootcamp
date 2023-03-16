@@ -17,7 +17,7 @@ if ((Get-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration
 Get-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes
 Get-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration
 
-# Initialize node
+# Initialize node. Run checks on every physical node to see if all requirements are satisfied to install AKS hybrid.
 Initialize-AksHciNode
 
 # Create folders in V: drive
