@@ -23,7 +23,7 @@ New-AksHciNodePool -clusterName $workloadClusterName -name windowsnodepool -coun
 # Scale nodePool
 Set-AksHciNodePool -clusterName $workloadClusterName -name linuxnodepool -count 2
 # Scale controlPlane
-Set-AksHciCluster –Name $workloadClusterName -controlPlaneNodeCount 3
+Set-AksHciCluster -name $workloadClusterName -controlPlaneNodeCount 3
 
 
 ### Integrate the workload cluster with Azure Arc
