@@ -2,10 +2,9 @@
 
 This boot camp will explain what Azure Kubernetes Service (AKS) hybrid is focusing on the design and architecture of AKS hybrid solutions, as part of this boot camp the following topics will be covered:
 
-1. [Creation of aks host](./00-aks-host/script.ps1)
-1. [Creation of aks workload cluster](./01-new-workload-cluster/script.ps1)
-1. [Connecting to workload cluster](./02-kubectl-to-cluster/script.ps1)
-1. [Deploy aks app](./03-deploy-app/script.ps1)
+1. [Creation of aks host](./01-deploy-aks-host/script.ps1)
+1. [Creation of aks workload cluster](./02-new-workload-cluster/script.ps1)
+1. [Connecting to workload cluster with kubectl](./03-working-with-kubectl/script.ps1)
 1. [Configure azure ad authentication](./04-azure-ad/script.ps1)
 1. [Configure azure RBAC](./05-azure-rbac/script.ps1)
 1. [Configure monitoring](./06-monitoring/script.ps1)
