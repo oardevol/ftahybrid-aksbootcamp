@@ -12,8 +12,8 @@ New-AksHciCluster -name $workloadClusterName -nodePoolName linuxnodepool -contro
 Get-AksHciCluster
 Get-AksHciNodePool -clusterName $workloadClusterName
 
-# You can access the cluster through kubectl, getting the kubeconfig file with the following command
-Get-AksHciCredential -name $workloadClusterName
+# At this point you can work with kubectl against your k8s cluster
+# See next module on how to get credentials and connect to the cluster
 
 ### Manage the cluster
 
