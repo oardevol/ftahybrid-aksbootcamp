@@ -1,13 +1,18 @@
+# Variables used in this script, defined in ../env.ps1
+# $subscriptionId, $tenantId, $resourceGroup
+
 # Define variables
 $group_name="aks-bootcamp-users"
-$resource_group="rg-bootcamp"
-$current_user_obj_id=(az ad signed-in-user show --query "id" -o tsv)
+
+# Login to az cli
+az login --tenant $tenantId
+az account set --subscription $subscriptionId
 
 # Create Azure AD group
-az login
 az ad group create --display-name $group_name --mail-nickname $group_name
 
-# Add user to group
+# Add current user to group
+$current_user_obj_id=(az ad signed-in-user show --query "id" -o tsv)
 az ad group member add --group $group_name --member-id $current_user_obj_id
 
 # Give user permissions to Arc enabled K8s permission
@@ -47,4 +52,4 @@ subjects:
 kubectl apply -f rolebinding-dev-namespace.yaml
 
 # Connect
-az connectedk8s proxy -n $clusterName -g resource_group
+az connectedk8s proxy -n $clusterName -g $resourceGroup 

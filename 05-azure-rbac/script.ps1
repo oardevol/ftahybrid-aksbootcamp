@@ -1,19 +1,21 @@
-$clusterName="wld02-cluster"
-$subscriptionId = "f89ca1d5-8a0f-413e-aa15-8d22bf52c8f6"
-$resourceGroup = "oardevol-hybrid"
-$tenantId = "28fb5b77-7c3b-4f34-9250-7492ccfd85fe"
+# Variables used in this script, defined in ../env.ps1
+# $subscriptionId, $tenantId, $resourceGroup
+
+# We will spin up a new cluster
+$rbacClusterName="wld02-cluster"
 
 # Install az cli
 $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
 
 # Sign in to Azure
-Connect-AzAccount
+Connect-AzAccount -Tenant $tenantId
 Set-AzContext -Subscription $subscriptionId
-az login
+
+az login --tenant $tenantId
 az account set --subscription $subscriptionId
 
 # Create server app
-$SERVER_APP_ID=az ad app create --display-name "${clusterName}Server" --identifier-uris "api://${tenantId}/${clusterName}" --query appId -o tsv
+$SERVER_APP_ID=az ad app create --display-name "${rbacClusterName}Server" --identifier-uris "api://${tenantId}/${rbacClusterName}" --query appId -o tsv
 Set-Content -Path "oauth2-permissions.json" -Value "{ `
     ""oauth2PermissionScopes"": [ `
         { `
@@ -41,7 +43,7 @@ az ad app permission add --id "${SERVER_APP_ID}" --api 00000003-0000-0000-c000-0
 az ad app permission grant --id "${SERVER_APP_ID}" --api 00000003-0000-0000-c000-000000000000 --scope User.Read
 
 # Create client app and service principal
-$CLIENT_APP_ID=az ad app create --display-name "${clusterName}Client" --is-fallback-public-client --public-client-redirect-uris "api://${tenantId}/${clusterName}client" --query appId -o tsv
+$CLIENT_APP_ID=az ad app create --display-name "${rbacClusterName}Client" --is-fallback-public-client --public-client-redirect-uris "api://${tenantId}/${rbacClusterName}client" --query appId -o tsv
 az ad sp create --id "${CLIENT_APP_ID}"
 $oAuthPermissionId=az ad app show --id "${SERVER_APP_ID}" --query "api.oauth2PermissionScopes[0].id" -o tsv
 az ad app permission add --id "${CLIENT_APP_ID}" --api "${SERVER_APP_ID}" --api-permissions ${oAuthPermissionId}=Scope
@@ -71,7 +73,7 @@ $sp=az ad sp create-for-rbac --role "Kubernetes Cluster - Azure Arc Onboarding" 
 $PWord = ConvertTo-SecureString -String $sp.password -AsPlainText -Force
 $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $sp.appId, $PWord
 
-New-AksHciCluster -name $clusterName  -enableAzureRBAC -resourceGroup $resourceGroup `
+New-AksHciCluster -name $rbacClusterName -enableAzureRBAC -resourceGroup $resourceGroup `
     -credential $Credential -subscriptionID $subscriptionId -tenantId $tenantId `
     -nodePoolName linuxnodepoolwld02 -controlPlaneNodeCount 1 -nodeCount 1 -osType linux  `
     -appId $SERVER_APP_ID -appSecret $SERVER_APP_SECRET -aadClientId $CLIENT_APP_ID

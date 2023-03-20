@@ -2,16 +2,17 @@
 
 This boot camp will explain what Azure Kubernetes Service (AKS) hybrid is focusing on the design and architecture of AKS hybrid solutions, as part of this boot camp the following topics will be covered:
 
-1. [Creation of aks host](./00-aks-host/script.ps1)
-2. [Creation of aks workload cluster](./01-new-workload-cluster/script.ps1)
-3. [Connecting to workload cluster](./02-kubectl-to-cluster/script.ps1)
-4. [Deploy aks app](./03-deploy-app/script.ps1)
-5. [Configure azure ad authentication](./04-azure-ad/script.ps1)
-6. [Configure azure RBAC](./05-azure-rbac/script.ps1)
-7. [Configure monitoring](./06-monitoring/script.ps1)
-8. [Provision ARC resource bridge](./07-resource-bridge/script.ps1)
-9. [Patching and upgrade](./08-patching-and-upgrade/script.ps1)
-10. [Autoscaler](./09-autoscaler/script.ps1)
+1. [Creation of aks host](./01-deploy-aks-host/script.ps1)
+1. [Creation of aks workload cluster](./02-new-workload-cluster/script.ps1)
+1. [Connecting to workload cluster with kubectl](./03-working-with-kubectl/script.ps1)
+1. [Configure azure ad authentication](./04-azure-ad/script.ps1)
+1. [Configure azure RBAC](./05-azure-rbac/script.ps1)
+1. [Configure monitoring](./06-monitoring/script.ps1)
+1. [Provision ARC resource bridge](./07-resource-bridge/script.ps1)
+1. [Patching and upgrade](./08-patching-and-upgrade/script.ps1)
+1. [Autoscaler](./09-autoscaler/script.ps1)
+
+> Find the recordings of this boot camp in [this youtube playlist](https://www.youtube.com/playlist?list=PLpCnjLkpG110bsCLZ7j8FAGE00J7sqWgk)
 
 ## Duration
 
@@ -22,13 +23,17 @@ This boot camp will have a duration of **5 hours**, during this time it will not
 This boot camp is targeted to the following roles:
 
 - Azure Stack HCI infrastructure engineer looking to understand better what Kubernetes is and what administrative/operational tasks are needed in the Stack HCI environment
-- Kubernetes / AKS Admin looking at understanding aks hybrid solution and differences between aks hybrid and other K8s distribution (cloud based or on-premises)
+- Kubernetes / AKS Admin looking at understanding AKS hybrid solution and differences between AKS hybrid and other K8s distribution (cloud based or on-premises)
 
 ## Environment setup
 
-We will use a Windows Server nested virtualization environment installed [following the official instructions](https://learn.microsoft.com/azure/aks/hybrid/aks-hci-evaluation-guide-1). Use the following button to deploy in your Azure Subscription:
+We will use a Windows Server nested virtualization environment installed [following the official instructions](https://learn.microsoft.com/azure/aks/hybrid/aks-hci-evaluation-guide-1). Click on the image bellow for a video recording of the process:
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Faks-hci%2Fmain%2Feval%2Fjson%2Fakshcihost.json" title="Deploy to Azure" target="_blank"><img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"></a>
+[![Environment setup](https://img.youtube.com/vi/cMSzEHZsxJY/maxresdefault.jpg)](https://youtu.be/cMSzEHZsxJY)
+
+Use the following button to deploy in your Azure Subscription:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Faks-hci%2Fmain%2Feval%2Fjson%2Fakshcihost.json)
 
 Things to note:
 

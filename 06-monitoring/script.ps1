@@ -1,3 +1,6 @@
+# Variables used in this script, defined in ../env.ps1
+# $clusterName
+
 # Enable monitoring (Prometheus) to an existing cluster
 Install-AksHciMonitoring -Name $clusterName -storageSizeGB 100 -retentionTimeHours 240
 
@@ -9,7 +12,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 helm install grafana grafana/grafana --version 6.11.0 --set nodeSelector."kubernetes\.io/os"=linux --set sidecar.dashboards.enabled=true --set sidecar.datasources.enabled=true -n monitoring
 
-# connect to grafana
+# Connect to grafana
 $secret=kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}"
 $secret=[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($secret))
 $podName=kubectl get pods --namespace monitoring -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}"
