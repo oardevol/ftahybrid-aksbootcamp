@@ -12,6 +12,9 @@ if ((Get-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes).Registratio
 if ((Get-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration).RegistrationState -ne "Registered") {
    Register-AzResourceProvider -ProviderNamespace Microsoft.KubernetesConfiguration
 }
+if ((Get-AzResourceProvider -ProviderNamespace Microsoft.ExtendedLocation).RegistrationState -ne "Registered") {
+    Register-AzResourceProvider -ProviderNamespace Microsoft.ExtendedLocation
+}
 
 # Verify that provider are registered in the subscription
 Get-AzResourceProvider -ProviderNamespace Microsoft.Kubernetes
@@ -33,7 +36,7 @@ $vnet = New-AksHciNetworkSetting -name "mgmtvnet" -vSwitchName "InternalNAT" -ga
 
 # Configure aks host (use specific version if you're planning to deploy Arc Resource Bridge)
 Set-AksHciConfig -vnet $vnet -imageDir "V:\AKS-HCI\Images" -workingDir "V:\AKS-HCI\WorkingDir" `
-   -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose -version "1.0.13.10907"
+   -cloudConfigLocation "V:\AKS-HCI\Config" -Verbose
 
 Set-AksHciRegistration -SubscriptionId $subscriptionId -ResourceGroupName $resourceGroup
 
